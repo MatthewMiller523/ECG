@@ -1,0 +1,3 @@
+C:\python_envs\ecg_env\Scripts\activate.bat
+
+C:\Users\matth\Documents\ECG_project0
