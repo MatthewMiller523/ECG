@@ -1,6 +1,9 @@
+#model template
+
 import torch
 import torch.nn as nn
 
+#creates a model
 class Classifier_0(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, num_classes):
         super().__init__()

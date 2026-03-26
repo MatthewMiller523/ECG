@@ -1,7 +1,8 @@
-ECG.0
+ECG_projectN
 
 Matthew Miller
 Init 3/25/2026
+Iteration 0.0 as of 3/25/2026
 
 The project performs DL-based signal processing on ECG data from Physionet (ptb xl[1]). The initial analysis is unsupervised learning. Information from unsupervised learning such as key features and structures are used in supervised learning to implement classification, analysis, etc.
 
@@ -23,7 +24,8 @@ ECG_projectN/
 | |-dataset.py
 | |-utils.py
 | |-models/
-|   |-models...
+|   |-models.py (template)
+|   |-m_classifier_0.py (example)
 
 
 Bib:
