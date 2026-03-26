@@ -24,7 +24,7 @@ def load_data_0(dataFrame, config):
 #tmp is a list, created empty, filled in the if-statement
 #the keys loop runs through all keys in the y_dic dictionary
 #tmp.append adds the values of all elements in the y_dic dictionary to the list
-def aggregate_diagnostic(y_dic):
+def aggregate_diagnostic(y_dic, agg_df):
     tmp = []
     for key in y_dic.keys():
         if key in agg_df.index:

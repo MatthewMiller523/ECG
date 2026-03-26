@@ -5,6 +5,7 @@ from pathlib import Path
 import tomllib
 
 import pandas as pd
+#import wfdb  #unneeded as yet
 import ast
 
 import loader_func_0 as lf
@@ -31,5 +32,10 @@ Y.scp_codes = Y.scp_codes.apply(lambda x: ast.literal_eval(x))
 X = lf.load_data_0(Y, config)
 
 # Load scp_statements.csv for diagnostic aggregation
-agg_df = pd.read_csv(path+'scp_statements.csv', index_col=0)
+agg_df = pd.read_csv(data_path+'scp_statements.csv', index_col=0)
 agg_df = agg_df[agg_df.diagnostic == 1]
+
+# Apply diagnostic superclass
+Y['diagnostic_superclass'] = Y.scp_codes.apply(
+    lambda x: lf.aggregate_diagnostic(x, agg_df)
+)    
