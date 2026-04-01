@@ -1,5 +1,9 @@
 title = "ECG Project Config"
 
+[general]
+r_seed = 1776
+np_r_seed = 1777
+
 [model]
 input_size = 12
 hidden_size = 100
@@ -10,6 +14,8 @@ num_classes = 2
 batch_size = 12
 epochs = 100
 initial_learn_rate = 0.001
+test_fold = 10
+validation_fold = 9
 
 [data]
 path = "D:/ECG_Data/"

@@ -9,7 +9,8 @@ Dirty main
 Runs main.py but with more variables in workspace for easier debugging
 """
 
-from ecg_lib.load_data0 import load_data0
+from ecg_lib.load_data_0 import load_data0
+from ecg_lib.fold_func_0 import fold_0
 #import settings
 from pathlib import Path
 import tomllib
@@ -21,9 +22,17 @@ with open(settings_path, "rb") as f:
     config = tomllib.load(f)
 
 #load data
-self.data, self.truth = load_data0(config)
+data, truth = load_data0(config)
 
 #split data
+fold_inputs = {
+    "X": data,
+    "Y": truth,
+    "config": config
+    }
+
+fold_data = fold_0(fold_inputs)
+
 
 #call the training function in train.py
 
