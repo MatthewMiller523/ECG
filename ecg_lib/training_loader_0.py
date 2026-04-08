@@ -1,0 +1,40 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Apr  1 00:00:16 2026
+
+@author: Matthew Miller
+
+training loader
+because woo
+
+"""
+
+import torch
+import torchvision
+#import torchvision.transforms as transforms
+
+from torch.utils.tensorboard import SummaryWriter
+from datetime import datetime
+
+class_selection = "diagnostic_superclass"
+
+#def training_loader_0(inputs)
+inputs = fold_data
+
+#unpack inputs if necessary
+X_train = inputs["X_train"]
+X_val = inputs["X_val"]
+X_test = inputs["X_test"]
+Y_train = inputs["Y_train"]
+Y_val = inputs["Y_val"]
+Y_test = inputs["Y_test"]
+
+#uncomment if config is included in inputs
+#config = inputs["config"]
+#===============================
+
+training_loader = torch.utils.data.DataLoader(train_data, batch_size=4, shuffle=True)
+validation_loader = torch.utils.data.DataLoader(val_data, batch_size=4, shuffle=False)
+
+
+classes =  Y["diagnostic_superclass"].unique()
