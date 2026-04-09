@@ -20,9 +20,9 @@ def fold_0(inputs):
 
     #random.seed(config["general"]["r_seed"]            #set random module seed
     #np.random.seed(config["general"]["np_r_seed"])     #set np seed
-    test_fold = config["training"]["test_fold"]         #the test_fold is a constant testdata set
+    test_fold = config["model"]["test_fold"]         #the test_fold is a constant testdata set
     val_fold = random.randrange(9)                      #just use random for now/could set this to 9
-    #val_fold = config["training"]["validation_fold"]   #set validation fold
+    #val_fold = config["model"]["validation_fold"]   #set validation fold
 
 
     val_mask = (Y.strat_fold == val_fold)               #selected out val and test

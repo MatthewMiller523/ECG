@@ -14,7 +14,7 @@ class Classifier_0(nn.Module):
         self.lstm = nn.LSTM(
             input_size=input_size,
             hidden_size=hidden_size,
-            num_layers=num_layers,
+            num_layers=num_layers,  #what does this do?
             batch_first=True,
             bidirectional=True, #make it a Bidirectional LSTM layer
         )

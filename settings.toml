@@ -5,17 +5,24 @@ r_seed = 1776
 np_r_seed = 1777
 
 [model]
+#model proper
 input_size = 12
-hidden_size = 100
-num_layers = 2
-num_classes = 2
-
-[training]
-batch_size = 12
-epochs = 100
+hidden_size = 64
+num_layers = 1
+num_classes = 1
+num_workers = 4
+batch_size = 4
 initial_learn_rate = 0.001
+
+#training proper
+epochs = 5
+validation_patience = 10
+validation_frequency = 5
+
+#data proper
 test_fold = 10
 validation_fold = 9
+
 
 [data]
 path = "D:/ECG_Data/"
