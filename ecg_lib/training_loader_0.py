@@ -9,6 +9,31 @@ because woo
 
 """
 
+
+from ecg_lib.load_data_0 import load_data0
+from ecg_lib.fold_func_0 import fold_0
+#import settings
+from pathlib import Path
+import tomllib
+
+#get settings.toml information
+base_dir = Path(__file__).resolve().parent
+settings_path = base_dir.parent / "settings.toml"
+with open(settings_path, "rb") as f:
+    config = tomllib.load(f)
+
+#load data
+data, truth = load_data0(config)
+
+#split data
+fold_inputs = {
+    "X": data,
+    "Y": truth,
+    "config": config
+    }
+
+fold_data = fold_0(fold_inputs)
+
 import torch
 import torchvision
 #import torchvision.transforms as transforms
@@ -33,8 +58,8 @@ Y_test = inputs["Y_test"]
 #config = inputs["config"]
 #===============================
 
-training_loader = torch.utils.data.DataLoader(train_data, batch_size=4, shuffle=True)
-validation_loader = torch.utils.data.DataLoader(val_data, batch_size=4, shuffle=False)
+training_loader = torch.utils.data.DataLoader(X_train, batch_size=4, shuffle=True, num_workers=4)
+validation_loader = torch.utils.data.DataLoader(X_val, batch_size=4, shuffle=False, num_workers=4)
 
 
-classes =  Y["diagnostic_superclass"].unique()
+#classes =  Y["diagnostic_superclass"].unique()
