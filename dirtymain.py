@@ -34,6 +34,8 @@ fold_inputs = {
     }
 
 fold_data = fold_0(fold_inputs)
+# %%
+
 
 #call the training function in train.py
 #============================================
@@ -67,6 +69,8 @@ X_test = inputs["X_test"]
 Y_train = inputs["Y_train"]
 Y_val = inputs["Y_val"]
 Y_test = inputs["Y_test"]
+# %%
+
 
 #uncomment if config is included in inputs
 #config = inputs["config"]
@@ -105,6 +109,10 @@ class ECG_Dataset(Dataset):
 train_dataset = ECG_Dataset(X_train, Y_train)
 val_dataset = ECG_Dataset(X_val, Y_val)
 test_dataset = ECG_Dataset(X_test, Y_test)
+
+print(X_train.shape)
+print(Y_train.shape)
+
 
 train_loader = DataLoader(
     train_dataset,
