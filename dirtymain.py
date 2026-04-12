@@ -13,6 +13,8 @@ Runs main.py but with more variables in workspace for easier debugging
 #=======================================
 from ecg_lib.load_data_0 import load_data0
 from ecg_lib.fold_func_0 import fold_0
+import sys
+
 #import settings
 from pathlib import Path
 import tomllib
@@ -55,7 +57,8 @@ from torch.utils.data import Dataset, DataLoader
 
 from ecg_lib.models.m_classifier_0 import Classifier_0
 from ecg_lib.models.m_conv_0 import conv_class_0 as cc_0
-
+from ecg_lib.preprocessing_0 import d_average_array_0 as daa
+#import numpy as np
 
 from datetime import datetime
 
@@ -101,16 +104,26 @@ class ECG_Dataset(Dataset):
 
 #===========================================================
 #Do data stuff
+#need to fix the data into an appropriate pytorch tensor
+#Since the data has already been divided into 3 folds, I will be brute forcing this
+
+X_train_0 = daa(X_train, config)
+X_val_0 = daa(X_val, config)
+X_test_0 = daa(X_test, config)
+
+X_train_1 = torch.tensor(X_train_0, dtype=torch.float32)
+X_val_1 = torch.tensor(X_val_0, dtype=torch.float32)
+X_test_1 = torch.tensor(X_test_0, dtype=torch.float32)
+
 #num_features = len(input_data) This might not be constant
 #num_classes = num classes      This should be constant across everything
 #__everything's in the config__
 
-
 #========================================================
 
-train_dataset = ECG_Dataset(X_train, Y_train)
-val_dataset = ECG_Dataset(X_val, Y_val)
-test_dataset = ECG_Dataset(X_test, Y_test)
+train_dataset = ECG_Dataset(X_train_1, Y_train)
+val_dataset = ECG_Dataset(X_val_1, Y_val)
+test_dataset = ECG_Dataset(X_test_1, Y_test)
 
 print(X_train.shape)
 print(Y_train.shape)

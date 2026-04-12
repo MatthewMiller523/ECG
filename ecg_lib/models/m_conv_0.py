@@ -10,7 +10,8 @@ class conv_class_0(nn.Module):
         
         self.Conv2d(1, 16, kernel_size=3, padding =1)
         self.ac1 = nn.Softsign()
-        self.fc1 = nn.Linear(hidden_size * 2, 64)   # *2 for BiLSTM
+        self.flat = nn.Flatten()
+        self.fc1 = nn.Linear(16 * 1000 * 12, 64)   # *2 for BiLSTM
         self.ac2 = nn.Softsign()
         self.fc2 = nn.Linear(64, num_classes)
         
