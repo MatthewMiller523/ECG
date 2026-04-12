@@ -54,6 +54,8 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 
 from ecg_lib.models.m_classifier_0 import Classifier_0
+from ecg_lib.models.m_conv_0 import conv_class_0 as cc_0
+
 
 from datetime import datetime
 
@@ -137,14 +139,20 @@ test_loader = DataLoader(
     num_workers=config["model"]["num_workers"]
     )
 #============================================================
-    
+'''    
 model = Classifier_0(
     input_size=config["model"]["input_size"],
     hidden_size=config["model"]["hidden_size"],     #x2 for bidirectional LSTM is included in classifier
     num_layers=config["model"]["num_layers"],       #I think this is a vestigial relic of an earlier idea
     num_classes = config["model"]["num_classes"]
     )
-
+'''
+model = cc_0(
+    input_size=config["model"]["input_size"],
+    hidden_size=config["model"]["hidden_size"],     #x2 for bidirectional LSTM is included in classifier
+    num_layers=config["model"]["num_layers"],       #I think this is a vestigial relic of an earlier idea
+    num_classes = config["model"]["num_classes"]
+    )
 #============================================================
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
