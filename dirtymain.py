@@ -121,6 +121,10 @@ X_test_1 = torch.tensor(X_test_0, dtype=torch.float32)
 
 #========================================================
 
+print(X_train.shape)
+print(Y_train.shape)
+
+
 train_dataset = ECG_Dataset(X_train_1, Y_train)
 val_dataset = ECG_Dataset(X_val_1, Y_val)
 test_dataset = ECG_Dataset(X_test_1, Y_test)
