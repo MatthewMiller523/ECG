@@ -8,7 +8,7 @@ class conv_class_0(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, num_classes):
         super().__init__()
         
-        self.Conv2d(1, 16, kernel_size=3, padding =1)
+        self.conv2s = nn.Conv2d(1, 16, kernel_size=3, padding =1)
         self.ac1 = nn.Softsign()
         self.flat = nn.Flatten()
         self.fc1 = nn.Linear(16 * 1000 * 12, 64)   # *2 for BiLSTM

@@ -17,12 +17,13 @@ def fold_0(inputs):
     X = inputs["X"]
     Y = inputs["Y"]
     config = inputs["config"]
+    train_index = config["data"]["train_index"]
 
     #random.seed(config["general"]["r_seed"]            #set random module seed
     #np.random.seed(config["general"]["np_r_seed"])     #set np seed
-    test_fold = config["model"]["test_fold"]         #the test_fold is a constant testdata set
-    val_fold = random.randrange(9)                      #just use random for now/could set this to 9
-    #val_fold = config["model"]["validation_fold"]   #set validation fold
+    test_fold = config["model"]["test_fold"]            #the test_fold is a constant testdata set
+    val_fold = 9                                        #just use random for now/could set this to 9
+    #val_fold = config["model"]["validation_fold"]      #set validation fold
 
 
     val_mask = (Y.strat_fold == val_fold)               #selected out val and test
@@ -33,9 +34,9 @@ def fold_0(inputs):
     X_val = [x for x, keep in zip(X, val_mask.values) if keep]
     X_test = [x for x, keep in zip(X, test_mask.values) if keep]
     
-    Y_train = Y[train_mask]
-    Y_val = Y[val_mask]
-    Y_test = Y[test_mask]
+    Y_train = Y[train_mask].iloc[:,train_index]
+    Y_val = Y[val_mask].iloc[:,train_index]
+    Y_test = Y[test_mask].iloc[:,train_index]
     
     outputs = {
         "X_train": X_train,

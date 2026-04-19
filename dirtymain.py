@@ -58,7 +58,7 @@ from torch.utils.data import Dataset, DataLoader
 from ecg_lib.models.m_classifier_0 import Classifier_0
 from ecg_lib.models.m_conv_0 import conv_class_0 as cc_0
 from ecg_lib.preprocessing_0 import d_average_array_0 as daa
-#import numpy as np
+import numpy as np
 
 from datetime import datetime
 
@@ -91,7 +91,8 @@ class ECG_Dataset(Dataset):
         Y: [N]
         '''
         self.X = torch.as_tensor(X, dtype=torch.float32)
-        self.Y = torch.as_tensor(Y, dtype=torch.long)   #fix this when ready
+        #self.Y = torch.as_tensor(Y, dtype=torch.long)   #fix this when ready
+        self.Y = torch.Tensor(Y.to_numpy(dtype=np.float32))   #fix this when ready
 
     def __len__(self):
         return len(self.X)
@@ -121,16 +122,12 @@ X_test_1 = torch.tensor(X_test_0, dtype=torch.float32)
 
 #========================================================
 
-print(X_train.shape)
-print(Y_train.shape)
-
-
 train_dataset = ECG_Dataset(X_train_1, Y_train)
 val_dataset = ECG_Dataset(X_val_1, Y_val)
 test_dataset = ECG_Dataset(X_test_1, Y_test)
 
-print(X_train.shape)
-print(Y_train.shape)
+#print(X_train.shape)
+#print(Y_train.shape)
 
 
 train_loader = DataLoader(
@@ -179,12 +176,12 @@ model = model.to(device)
 #loss and optimizer
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.adam(model.parameters(), lr = config["model"]["initial_learn_rate"])
+optimizer = optim.Adam(model.parameters(), lr = config["model"]["initial_learn_rate"])
 
 #=============================================================
 #training loop
 
-val_flag = false    #val_flag starts false and goes true when the val condition hits
+val_flag = False    #val_flag starts false and goes true when the val condition hits
                     #i.e. when val_patience exceeds the val_count, switch val_flag to true
                     #can also do this directly, but that's harder to read
                     
@@ -240,6 +237,6 @@ while epoch_count < config["model"]["epochs"] and not val_flag:
             print(f"Validation Count {best_val_count}/{config["model"]["validation_patience"]}, Loss: {avg_loss:.4f}")
 
     if best_val_count >= config["model"]["validation_patience"]:    #val patience test
-        val_flag = true
+        val_flag = True
 
         

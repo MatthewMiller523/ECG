@@ -33,8 +33,8 @@ Y_test = inputs["Y_test"]
 #config = inputs["config"]
 #===============================
 
-training_loader = torch.utils.data.DataLoader(X_train, batch_size=4, shuffle=True, num_workers=4)
-validation_loader = torch.utils.data.DataLoader(X_val, batch_size=4, shuffle=False, num_workers=4)
+training_loader = torch.utils.data.DataLoader(X_train, batch_size=4, shuffle=True, num_workers=0)
+validation_loader = torch.utils.data.DataLoader(X_val, batch_size=4, shuffle=False, num_workers=0)
 
 
 #classes =  Y["diagnostic_superclass"].unique()

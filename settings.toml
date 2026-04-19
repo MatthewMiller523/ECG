@@ -30,3 +30,4 @@ timesteps = 10
 features = 10
 sampling_rate = 100   #100 or 500
 num_leads = 12
+train_index = 2
