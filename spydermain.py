@@ -9,7 +9,7 @@ updated from dirtymain_1 4/22/2026
 
 from ecg_lib.load_data_0 import load_data_0 as ld
 from ecg_lib.fold_func_0 import fold_0
-from ecg_lib.preprocessing_1 import preprocessing_fun_0 as ppm
+#from ecg_lib.preprocessing_1 import preprocessing_fun_0 as ppm
 import sys
 
 #import settings
@@ -39,7 +39,7 @@ def main():
 
     fold_data = fold_0(fold_inputs)
 
-    train_dataset, val_dataset, test_dataset = ppm(fold_data, config)
+    #train_dataset, val_dataset, test_dataset = ppm(fold_data, config)
     
     return {
     'truth':truth

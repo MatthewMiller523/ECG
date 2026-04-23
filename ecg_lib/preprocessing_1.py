@@ -28,7 +28,7 @@ def d_average_slice_0(inputs):
 
 def d_average_array_0(inputs, config):
     num_samples = len(inputs)
-    out = np.zeros((num_samples, 1, 1000, config["data"]["num_leads"]))
+    out = np.zeros((num_samples, 1, 1000, config['data']['num_leads']))
     #print(f"out.shape {out.shape}")
     #print(f"len(inputs) {len(inputs)}")
     #print(f"type(inputs) {type(inputs)}")
@@ -37,25 +37,22 @@ def d_average_array_0(inputs, config):
     #print(f"inputs[0][0].shape {inputs[0][0].shape}")
 
     for sample_index in range(num_samples):
-        for lead_index in range(config["data"]["num_leads"]):
+        for lead_index in range(config['data']['num_leads']):
             out[sample_index, 0] = inputs[sample_index][0][lead_index]
 
     #print(f"out.shape {out[0,0].shape}")
     return out
 
 def preprocessing_fun_0(inputs, config):
-    #unpack inputs if necessary
-    X_train = inputs["X_train"]
-    X_val = inputs["X_val"]
-    X_test = inputs["X_test"]
-    Y_train = inputs["Y_train"]
-    Y_val = inputs["Y_val"]
-    Y_test = inputs["Y_test"]
-    # %%
-    #===========================================================
-    #Do data stuff
-    #need to fix the data into an appropriate pytorch tensor
-    #Since the data has already been divided into 3 folds, I will be brute forcing this
+    #unpack inputs
+    X_train = inputs['X_train']
+    X_val = inputs['X_val']
+    X_test = inputs['X_test']
+    Y_train = inputs['Y_train']
+    Y_val = inputs['Y_val']
+    Y_test = inputs['Y_test']
+
+    #============================
 
     X_train_0 = d_average_array_0(X_train, config)
     X_val_0 = d_average_array_0(X_val, config)

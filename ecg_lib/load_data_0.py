@@ -29,10 +29,10 @@ import ast
 #import functions
 from . import loader_func_0 as lf
 
-def load_data0(config):
+def load_data_0(config):
     try:
-        data_path = config["data"]["path"]
-        sampling_rate = config["data"]["sampling_rate"]
+        data_path = config['data']['path']
+        sampling_rate = config['data']['sampling_rate']
     except KeyError as e:
         raise KeyError(f"Missing required config key: {e}") from e
         
@@ -41,8 +41,8 @@ def load_data0(config):
             f"Unsupported sampling_rate {sampling_rate!r} in settings.toml. Expected 100 or 500.")
         
     data_dir = Path(data_path)
-    ptbxl_csv = data_dir / "ptbxl_database.csv"  #this is the csv of files and their sampling rates
-    scp_csv = data_dir / "scp_statements.csv"    
+    ptbxl_csv = data_dir / 'ptbxl_database.csv'  #this is the csv of files and their sampling rates
+    scp_csv = data_dir / 'scp_statements.csv'    
     
     #SCP-ECG is the Standard Communications Protoccol for computer assisted electrocardiography
     #there's a wikipedia page: https://en.wikipedia.org/wiki/SCP-ECG
@@ -57,7 +57,7 @@ def load_data0(config):
 
     #opens datafiles truth
     try:
-        Y = pd.read_csv(ptbxl_csv, index_col="ecg_id")
+        Y = pd.read_csv(ptbxl_csv, index_col='ecg_id')
     except Exception as e:
         raise RuntimeError(f"Failed to read PTB-XL annotations from {ptbxl_csv}") from e
         

@@ -18,6 +18,7 @@ def fold_0(inputs):
     Y = inputs['Y']
     config = inputs['config']
     train_index = config['data']['train_index']
+    train_key = config['data']['train_key']
 
     #random.seed(config["general"]["r_seed"]            #set random module seed
     #np.random.seed(config["general"]["np_r_seed"])     #set np seed
@@ -37,6 +38,8 @@ def fold_0(inputs):
     Y_train = Y[train_mask].iloc[:,train_index]
     Y_val = Y[val_mask].iloc[:,train_index]
     Y_test = Y[test_mask].iloc[:,train_index]
+    
+    print(Y_train.head(15))
     
     outputs = {
         'X_train': X_train,

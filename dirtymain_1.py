@@ -11,9 +11,8 @@ Runs main.py but with more variables in workspace for easier debugging
 #=======================================
 #Working and already fixed
 #=======================================
-from ecg_lib.load_data_0 import load_data0
+from ecg_lib.load_data_0 import load_data_0 as ld
 from ecg_lib.fold_func_0 import fold_0
-#from ecg_lib.ECG_Dataset_0 import ECG_Dataset
 from ecg_lib.preprocessing_1 import preprocessing_fun_0 as ppm
 import sys
 
@@ -30,7 +29,7 @@ def main():
         config = tomllib.load(f)
 
     #load data
-    data, truth = load_data0(config)
+    data, truth = ld(config)
 
     #split data
     fold_inputs = {
@@ -40,40 +39,22 @@ def main():
         }
 
     fold_data = fold_0(fold_inputs)
-    # %%
 
     train_dataset, val_dataset, test_dataset = ppm(fold_data, config)
-
-    #call the training function in train.py
+    
     #============================================
-    #training_loader_0.py
+    #new code begins below--4/22/2026
     #============================================
 
     import torch
-    import torchvision
-    #import torchvision.transforms as transforms
 
-
-    from torch.utils.tensorboard import SummaryWriter
     import torch.nn as nn
     import torch.optim as optim
 
+    from torch.utils.tensorboard import SummaryWriter
     from torch.utils.data import Dataset, DataLoader
 
-    from ecg_lib.models.m_classifier_0 import Classifier_0
     from ecg_lib.models.m_conv_0 import conv_class_0 as cc_0
-
-    #from ecg_lib.preprocessing_1 import d_average_array_0 as daa
-    #import numpy as np
-
-    #from datetime import datetime
-
-    class_selection = 'diagnostic_superclass'
-
-    #def training_loader_0(inputs)
-    #inputs = fold_data
-
-
 
     train_loader = DataLoader(
         train_dataset,
@@ -82,7 +63,14 @@ def main():
         num_workers=config['model']['num_workers']
         )
 
-    x_db, y_db = train_loader.dataset[0]
+    '''    
+    x_db, y_db = train_loader.dataset[0:5]
+    print(type(y_db))
+    print(y_db.shape)
+    print(y_db.dtype)
+    print(y_db.ndim)
+    print(f"y_db, {y_db[0:5]}")
+    
     print(f"type(train_loader) {type(train_loader)}")
     print(f"len(train_loader.dataset) {len(train_loader.dataset)}")
     print(f"len(train_loader) {len(train_loader)}")
@@ -96,7 +84,7 @@ def main():
     print(f"shape first batch Y {Y_dbg.shape}")
     print(f"shape first observation from batch {X_dbg[0].shape}")
     print(f"first label from batch {Y_dbg[0]}")
-
+    '''
     val_loader = DataLoader(
         val_dataset,
         batch_size=config['model']['batch_size'],
@@ -152,10 +140,9 @@ def main():
             for X_batch, Y_batch in train_loader:
                 X_batch = X_batch.to(device)
                 Y_batch = Y_batch.long().to(device)
-                print(f"X_batch shape before model {X_batch.shape}")
-                print(f"Y_batch shape before model {Y_batch.shape}")
-                print(f"single observation shape from batch {X_batch[0].shape}")
-                
+                #print(f"X_batch shape before model {X_batch.shape}")
+                #print(f"Y_batch shape before model {Y_batch.shape}")
+                #print(f"single observation shape from batch {X_batch[0].shape}")
                 
                 outputs = model(X_batch)
                 loss = criterion(outputs, Y_batch)
@@ -183,8 +170,10 @@ def main():
                 outputs = model(X_batch)
                 loss = criterion(outputs, Y_batch)
 
-                if best_val_loss > loss:        #e.g. we're getting better/we just hit a new best val
-                    best_val_loss = loss
+                val_loss = loss.item()
+
+                if best_val_loss > val_loss:        #e.g. we're getting better/we just hit a new best val
+                    best_val_loss = val_loss
                     best_val_count = 0
                 else:                           #e.g. we're not getting better/previous val was better
                     best_val_count += 1
