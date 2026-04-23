@@ -25,8 +25,8 @@ def main():
 
     #get settings.toml information
     base_dir = Path(__file__).resolve().parent
-    settings_path = base_dir / "settings.toml"
-    with open(settings_path, "rb") as f:
+    settings_path = base_dir / 'settings.toml'
+    with open(settings_path, 'rb') as f:
         config = tomllib.load(f)
 
     #load data
@@ -34,9 +34,9 @@ def main():
 
     #split data
     fold_inputs = {
-        "X": data,
-        "Y": truth,
-        "config": config
+        'X': data,
+        'Y': truth,
+        'config': config
         }
 
     fold_data = fold_0(fold_inputs)
@@ -68,7 +68,7 @@ def main():
 
     #from datetime import datetime
 
-    class_selection = "diagnostic_superclass"
+    class_selection = 'diagnostic_superclass'
 
     #def training_loader_0(inputs)
     #inputs = fold_data
@@ -77,51 +77,58 @@ def main():
 
     train_loader = DataLoader(
         train_dataset,
-        batch_size=config["model"]["batch_size"],
+        batch_size=config['model']['batch_size'],
         shuffle=True,
-        num_workers=config["model"]["num_workers"]
+        num_workers=config['model']['num_workers']
         )
+
+    x_db, y_db = train_loader.dataset[0]
+    print(f"type(train_loader) {type(train_loader)}")
+    print(f"len(train_loader.dataset) {len(train_loader.dataset)}")
+    print(f"len(train_loader) {len(train_loader)}")
+    print(f"type first element x {type(x_db)}")
+    print(f"shape first element x {x_db.shape}")
+    print(f"type first element y {type(y_db)}")
+    print(f"value first element y {y_db}")
+
+    X_dbg, Y_dbg = next(iter(train_loader))
+    print(f"shape first batch X {X_dbg.shape}")
+    print(f"shape first batch Y {Y_dbg.shape}")
+    print(f"shape first observation from batch {X_dbg[0].shape}")
+    print(f"first label from batch {Y_dbg[0]}")
 
     val_loader = DataLoader(
         val_dataset,
-        batch_size=config["model"]["batch_size"],
+        batch_size=config['model']['batch_size'],
         shuffle=True,
-        num_workers=config["model"]["num_workers"]
+        num_workers=config['model']['num_workers']
         )
 
     #I don't think I'll need this, but create it now for completeness
-    #also, if I do need it later, I will never remember if I skipped it now
+    #also, if I do need it later, I will never remember whether I skipped it now
     test_loader = DataLoader(
         test_dataset,
-        batch_size=config["model"]["batch_size"],
+        batch_size=config['model']['batch_size'],
         shuffle=True,
-        num_workers=config["model"]["num_workers"]
+        num_workers=config['model']['num_workers']
         )
     #============================================================
-    '''    
-    model = Classifier_0(
-        input_size=config["model"]["input_size"],
-        hidden_size=config["model"]["hidden_size"],     #x2 for bidirectional LSTM is included in classifier
-        num_layers=config["model"]["num_layers"],       #I think this is a vestigial relic of an earlier idea
-        num_classes = config["model"]["num_classes"]
-        )
-    '''
     model = cc_0(
-        input_size=config["model"]["input_size"],
-        hidden_size=config["model"]["hidden_size"],     #x2 for bidirectional LSTM is included in classifier
-        num_layers=config["model"]["num_layers"],       #I think this is a vestigial relic of an earlier idea
-        num_classes = config["model"]["num_classes"]
+        input_size=config['model']['input_size'],
+        hidden_size=config['model']['hidden_size'],     #x2 for bidirectional LSTM is included in classifier
+        num_layers=config['model']['num_layers'],       #I think this is a vestigial relic of an earlier idea
+        num_classes = config['model']['num_classes']
         )
     #============================================================
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = model.to(device)
 
     #============================================================
     #loss and optimizer
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr = config["model"]["initial_learn_rate"])
+    optimizer = optim.Adam(model.parameters(), lr = config['model']['initial_learn_rate'])
 
     #=============================================================
     #training loop
@@ -134,9 +141,9 @@ def main():
     best_val_loss = float('inf')
     best_val_count = 0
 
-    while epoch_count < config["model"]["epochs"] and not val_flag:
+    while epoch_count < config['model']['epochs'] and not val_flag:
         
-        for epoch in range(config["model"]["validation_frequency"]):
+        for epoch in range(config['model']['validation_frequency']):
             model.train()
             running_loss=0.0
 
@@ -144,7 +151,11 @@ def main():
             
             for X_batch, Y_batch in train_loader:
                 X_batch = X_batch.to(device)
-                Y_batch = Y_batch.to(device)
+                Y_batch = Y_batch.long().to(device)
+                print(f"X_batch shape before model {X_batch.shape}")
+                print(f"Y_batch shape before model {Y_batch.shape}")
+                print(f"single observation shape from batch {X_batch[0].shape}")
+                
                 
                 outputs = model(X_batch)
                 loss = criterion(outputs, Y_batch)
@@ -167,7 +178,7 @@ def main():
 
             for X_batch, Y_batch in val_loader:
                 X_batch = X_batch.to(device)
-                Y_batch = Y_batch.to(device)
+                Y_batch = Y_batch.long().to(device)
                 
                 outputs = model(X_batch)
                 loss = criterion(outputs, Y_batch)
@@ -181,8 +192,14 @@ def main():
                 #validation stats to screen
                 print(f"Validation Count {best_val_count}/{config['model']['validation_patience']}, Loss: {avg_loss:.4f}")
 
-        if best_val_count >= config["model"]["validation_patience"]:    #val patience test
+        if best_val_count >= config['model']['validation_patience']:    #val patience test
             val_flag = True
 
-if __name__== "__main__":
-    main()
+    return {                        #debug out
+    'train_loader':train_loader,
+    'config':config,
+    'X_batch':X_batch
+    }
+
+if __name__== '__main__':
+    dbg = main()

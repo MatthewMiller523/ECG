@@ -14,14 +14,14 @@ import random
 def fold_0(inputs):
 
     #unpack inputs if necessary
-    X = inputs["X"]
-    Y = inputs["Y"]
-    config = inputs["config"]
-    train_index = config["data"]["train_index"]
+    X = inputs['X']
+    Y = inputs['Y']
+    config = inputs['config']
+    train_index = config['data']['train_index']
 
     #random.seed(config["general"]["r_seed"]            #set random module seed
     #np.random.seed(config["general"]["np_r_seed"])     #set np seed
-    test_fold = config["model"]["test_fold"]            #the test_fold is a constant testdata set
+    test_fold = config['model']['test_fold']            #the test_fold is a constant testdata set
     val_fold = 9                                        #just use random for now/could set this to 9
     #val_fold = config["model"]["validation_fold"]      #set validation fold
 
@@ -39,12 +39,12 @@ def fold_0(inputs):
     Y_test = Y[test_mask].iloc[:,train_index]
     
     outputs = {
-        "X_train": X_train,
-        "X_val": X_val,
-        "X_test": X_test,
-        "Y_train": Y_train,
-        "Y_val": Y_val,
-        "Y_test": Y_test
+        'X_train': X_train,
+        'X_val': X_val,
+        'X_test': X_test,
+        'Y_train': Y_train,
+        'Y_val': Y_val,
+        'Y_test': Y_test
         }
 
     return outputs

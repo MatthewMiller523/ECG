@@ -1,4 +1,4 @@
-title = "ECG Project Config"
+title = 'ECG Project Config'
 
 [general]
 r_seed = 1776
@@ -25,7 +25,7 @@ validation_fold = 9
 
 
 [data]
-path = "D:/ECG_Data/"
+path = 'D:/ECG_Data/'
 timesteps = 10
 features = 10
 sampling_rate = 100   #100 or 500

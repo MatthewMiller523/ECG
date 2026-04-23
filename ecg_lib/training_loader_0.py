@@ -16,18 +16,18 @@ import torchvision
 from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
 
-class_selection = "diagnostic_superclass"
+class_selection = 'diagnostic_superclass'
 
 #def training_loader_0(inputs)
 inputs = fold_data
 
 #unpack inputs if necessary
-X_train = inputs["X_train"]
-X_val = inputs["X_val"]
-X_test = inputs["X_test"]
-Y_train = inputs["Y_train"]
-Y_val = inputs["Y_val"]
-Y_test = inputs["Y_test"]
+X_train = inputs['X_train']
+X_val = inputs['X_val']
+X_test = inputs['X_test']
+Y_train = inputs['Y_train']
+Y_val = inputs[Y_val']
+Y_test = inputs['Y_test']
 
 #uncomment if config is included in inputs
 #config = inputs["config"]
