@@ -39,8 +39,6 @@ def fold_0(inputs):
     Y_val = Y[val_mask].iloc[:,train_index]
     Y_test = Y[test_mask].iloc[:,train_index]
     
-    print(Y_train.head(15))
-    
     outputs = {
         'X_train': X_train,
         'X_val': X_val,

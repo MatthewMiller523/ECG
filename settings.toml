@@ -11,13 +11,13 @@ hidden_size = 64
 num_layers = 1
 num_classes = 2
 num_workers = 0
-batch_size = 4
+batch_size = 10
 initial_learn_rate = 0.001
 
 #training proper
-epochs = 5
-validation_patience = 10
-validation_frequency = 5
+epochs = 100
+validation_patience = 200		#how many validation chances training has to get better
+validation_frequency = 200		#how often we validate
 
 #data proper
 test_fold = 10

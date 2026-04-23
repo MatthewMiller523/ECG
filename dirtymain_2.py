@@ -47,6 +47,7 @@ def main():
     #============================================
 
     import torch
+    import copy
 
     import torch.nn as nn
     import torch.optim as optim
@@ -54,7 +55,11 @@ def main():
     from torch.utils.tensorboard import SummaryWriter
     from torch.utils.data import Dataset, DataLoader
 
-    from ecg_lib.models.m_conv_0 import conv_class_0 as cc_0
+    from ecg_lib.models.m_conv_1 import (
+        conv_class_0 as cc_0,
+        conv_class_1 as cc_1,
+        conv_class_2 as cc_2
+        )
 
     train_loader = DataLoader(
         train_dataset,
@@ -101,7 +106,7 @@ def main():
         num_workers=config['model']['num_workers']
         )
     #============================================================
-    model = cc_0(
+    model = cc_1(
         input_size=config['model']['input_size'],
         hidden_size=config['model']['hidden_size'],     #x2 for bidirectional LSTM is included in classifier
         num_layers=config['model']['num_layers'],       #I think this is a vestigial relic of an earlier idea
@@ -128,66 +133,80 @@ def main():
     epoch_count = 0                    
     best_val_loss = float('inf')
     best_val_count = 0
+    #print(device)
+    #print(torch.cuda.is_available())
+    #print(torch.cuda.get_device_name(0))
 
-    while epoch_count < config['model']['epochs'] and not val_flag:
+    for epoch in range(config['model']['epochs']):
+        if val_flag:    
+            break           #make this a return command once this is moved into a subfunction
+            
+        model.train()
+        running_loss=0.0
+
+        #training loop
+        batch_count = 0
         
-        for epoch in range(config['model']['validation_frequency']):
-            model.train()
-            running_loss=0.0
-
-            #training loop
+        for X_batch, Y_batch in train_loader:
+            X_batch = X_batch.to(device)
+            Y_batch = Y_batch.long().to(device)
+            #print(f"X_batch shape before model {X_batch.shape}")
+            #print(f"Y_batch shape before model {Y_batch.shape}")
+            #print(f"single observation shape from batch {X_batch[0].shape}")
             
-            for X_batch, Y_batch in train_loader:
-                X_batch = X_batch.to(device)
-                Y_batch = Y_batch.long().to(device)
-                #print(f"X_batch shape before model {X_batch.shape}")
-                #print(f"Y_batch shape before model {Y_batch.shape}")
-                #print(f"single observation shape from batch {X_batch[0].shape}")
-                
-                outputs = model(X_batch)
-                loss = criterion(outputs, Y_batch)
-                
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
-                
-                running_loss += loss.item()
-                
-                epoch_count += 1        #inelegant but easy to read
-
-            #training stats to screen
-
-            avg_loss = running_loss / len(train_loader)
-            print(f"Epochs {epoch+1}/{config['model']['validation_frequency']}, Loss: {avg_loss:.4f}")
-            print(f"Iterations {len(train_loader)}")    
+            outputs = model(X_batch)
+            loss = criterion(outputs, Y_batch)
             
-            #validation loop
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            
+            running_loss += loss.item()
+            
+            batch_count += 1        #inelegant but easy to read
+            val_loss = 0
+            if batch_count % config['model']['validation_frequency'] == 0:
 
-            for X_batch, Y_batch in val_loader:
-                X_batch = X_batch.to(device)
-                Y_batch = Y_batch.long().to(device)
-                
-                outputs = model(X_batch)
-                loss = criterion(outputs, Y_batch)
+                avg_loss = running_loss / len(train_loader)
+                print(f"Epochs {epoch + 1}/{config['model']['epochs']}, Loss: {avg_loss:.4f}")
+                print(f"Iterations {len(train_loader)}")   
+
+                #validation loop
+                for X_batch, Y_batch in val_loader:
+                    X_batch = X_batch.to(device)
+                    Y_batch = Y_batch.long().to(device)
+                    
+                    outputs = model(X_batch)
+                    loss = criterion(outputs, Y_batch)
 
                 val_loss = loss.item()
 
                 if best_val_loss > val_loss:        #e.g. we're getting better/we just hit a new best val
                     best_val_loss = val_loss
                     best_val_count = 0
+                    #torch.save(model.state_dict(), 'best_model.pt')
+                    best_model = copy.deepcopy(model.state_dict())
                 else:                           #e.g. we're not getting better/previous val was better
                     best_val_count += 1
 
                 #validation stats to screen
-                print(f"Validation Count {best_val_count}/{config['model']['validation_patience']}, Loss: {avg_loss:.4f}")
+                print(f"Validation Count {best_val_count}/{config['model']['validation_patience']}, Val Loss: {val_loss:.4f}, Best Val Loss: {best_val_loss}")
 
-        if best_val_count >= config['model']['validation_patience']:    #val patience test
-            val_flag = True
+                if best_val_count >= config['model']['validation_patience']:    #val patience test
+                    val_flag = True
+                    break
+                
+
+        #training stats to screen
+
+ 
+        
 
     return {                        #debug out
     'train_loader':train_loader,
     'config':config,
-    'X_batch':X_batch
+    'X_batch':X_batch,
+    'best_model':best_model
     }
 
 if __name__== '__main__':

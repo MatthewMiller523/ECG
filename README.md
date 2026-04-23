@@ -4,7 +4,7 @@ Matthew Miller
 Init 3/25/2026
 Iteration 0.0 as of 3/25/2026
 
-The project performs DL-based signal processing on ECG data from Physionet (ptb xl[1]). The initial analysis is unsupervised learning. Information from unsupervised learning such as key features and structures are used in supervised learning to implement classification, analysis, etc.
+1. The project performs DL-based signal processing on ECG data from Physionet (ptb xl[1]). The initial analysis is unsupervised learning. Information from unsupervised learning such as key features and structures are used in supervised learning to implement classification, analysis, etc.
 
 Currently ECG is a github repository. For now, download, check directories, and run main/dirtymain.py
 
@@ -12,7 +12,7 @@ Change settings in 'settings.toml', which should be in the same directory as mai
 
 Ensure root directory is ECG_project0 not just ECG
 
-Where N is the iteration number:
+2. Key files and features (where N is the iteration number):
 
 ECG_projectN/
 |
@@ -25,7 +25,19 @@ ECG_projectN/
 | |-models/
 |   |-models.py (template)
 |   |-m_classifier_0.py (example)
+|	|-m_conv_1.py
 
+3. roadmap
+[ ] test
+[ ] learn rate scheduler
+[ ] load models as necessary
+[ ] monitor GPU usage
+[ ] output training metadata to csv
+[-] more models
+
+[ ] todo
+[-] ongoing/more needed
+[X] complete, may be removed from roadmap
 
 Bib:
 1. 
