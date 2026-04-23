@@ -10,7 +10,7 @@ input_size = 12
 hidden_size = 64
 num_layers = 1
 num_classes = 1
-num_workers = 4
+num_workers = 0
 batch_size = 4
 initial_learn_rate = 0.001
 

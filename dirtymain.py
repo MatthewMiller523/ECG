@@ -13,6 +13,7 @@ Runs main.py but with more variables in workspace for easier debugging
 #=======================================
 from ecg_lib.load_data_0 import load_data0
 from ecg_lib.fold_func_0 import fold_0
+from ecg_lib.ECG_Dataset_0 import ECG_Dataset
 import sys
 
 #import settings
@@ -57,7 +58,8 @@ from torch.utils.data import Dataset, DataLoader
 
 from ecg_lib.models.m_classifier_0 import Classifier_0
 from ecg_lib.models.m_conv_0 import conv_class_0 as cc_0
-from ecg_lib.preprocessing_0 import d_average_array_0 as daa
+from ecg_lib.preprocessing_1 import preprocess_0 as ppm
+#from ecg_lib.preprocessing_1 import d_average_array_0 as daa
 import numpy as np
 
 from datetime import datetime
@@ -81,27 +83,7 @@ Y_test = inputs["Y_test"]
 #config = inputs["config"]
 #===============================
 
-#this is a class because I'm going to deal with datasets as an opject. Ideally, this keeps things together
-#better than functions. idk
 
-class ECG_Dataset(Dataset):
-    def __init__(self, X, Y):
-        '''
-        X: [N, seq_len, num_features]
-        Y: [N]
-        '''
-        self.X = torch.as_tensor(X, dtype=torch.float32)
-        #self.Y = torch.as_tensor(Y, dtype=torch.long)   #fix this when ready
-        self.Y = torch.Tensor(Y.to_numpy(dtype=np.float32))   #fix this when ready
-
-    def __len__(self):
-        return len(self.X)
-
-    def __getitem__(self, idx):
-        x_i = self.X[idx]
-        y_i = self.Y[idx]
-        return x_i, y_i
-        
 
 #===========================================================
 #Do data stuff

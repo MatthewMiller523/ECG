@@ -91,5 +91,3 @@ def load_data0(config):
         
     return [X, Y]
 
-    
-    
