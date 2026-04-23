@@ -4,7 +4,7 @@ Matthew Miller
 Init 3/25/2026
 Iteration 0.0 as of 3/25/2026
 
-1. The project performs DL-based signal processing on ECG data from Physionet (ptb xl[1]). The initial analysis is unsupervised learning. Information from unsupervised learning such as key features and structures are used in supervised learning to implement classification, analysis, etc.
+1. The project performs DL-based signal processing on ECG data from Physionet (ptb xl[1]). The initial analysis is supervised learning. Unsupervised learning will be done next. Information from unsupervised learning such as key features and structures are used in supervised learning to implement classification, analysis, etc.
 
 Currently ECG is a github repository. For now, download, check directories, and run main/dirtymain.py
 
@@ -34,6 +34,8 @@ ECG_projectN/
 [ ] monitor GPU usage
 [ ] output training metadata to csv
 [-] more models
+|-[ ] unsupervised learning
+
 
 [ ] todo
 [-] ongoing/more needed
