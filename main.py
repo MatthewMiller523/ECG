@@ -9,46 +9,39 @@ N=0.1
 #=======================================
 #Working and already fixed
 #=======================================
-from ecg_lib.load_data_0 import load_data_0 as ld
-from ecg_lib.fold_func_0 import fold_0
-from ecg_lib.preprocessing_1 import preprocessing_fun_0 as ppm
-from ecg_lib.train_0 import m_train as mtrain_0
-from ecg_lib.model_test_0 import m_test_0 as mtest_0 
+from ecg_lib.read_config_0 import Config
+from ecg_lib.load_data_1 import load_data_0 as ld
+from ecg_lib.fold_func_0 import fold_0 as fold
+from ecg_lib.preprocessing_2 import preprocessing_fun_0 as ppm
+from ecg_lib.train_1 import m_train as mtrain
+from ecg_lib.model_test_0 import m_test_0 as mtest
+from ecg_lib.output_write_0 import o_write_0 as o_write
 import sys
 
 #import settings
-from pathlib import Path
-import tomllib
+#from pathlib import Path
+#import tomllib
 
 def main():
 
-    #get settings.toml information
-    base_dir = Path(__file__).resolve().parent
-    settings_path = base_dir / 'settings.toml'
-    with open(settings_path, 'rb') as f:
-        config = tomllib.load(f)
+    cfg = Config()
 
     #load data
-    data, truth = ld(config)
+    data, truth = ld(cfg)
+    fold_data = fold(data, truth, cfg)
+    train_loader, val_loader, test_loader = ppm(fold_data, cfg)
 
-    #split data
-    fold_inputs = {
-        'X': data,
-        'Y': truth,
-        'config': config
-        }
-
-    fold_data = fold_0(fold_inputs)
-    train_loader, val_loader, test_loader = ppm(fold_data, config)
+    #train model
+    t_model, status_var = mtrain(train_loader, val_loader, cfg)
     
-    #train_inputs = {
-    #    'train_loader':train_loader,
-    #    'val_loader':train_loader
-    #    }
-        
-    t_model = mtrain_0(train_loader, val_loader, config)    #for trained model
+    #test model
+    t_loss, t_acc = mtest(test_loader, t_model)
 
-    t_loss, t_acc = mtest_0(test_loader, t_model)
+    #write training metadata to file
+    if cfg.meta['output_csv']:
+        o_write(status_var, cfg)
+
+    return status_var
 
 if __name__== '__main__':
-    dbg = main()
+    dbg = main()        #dbg is all debugging (dbg) variables

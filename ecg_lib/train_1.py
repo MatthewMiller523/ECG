@@ -7,6 +7,7 @@ import copy
 
 import torch.nn as nn
 import torch.optim as optim
+import pandas as pd
 
 from torch.utils.tensorboard import SummaryWriter
 #from torch.utils.data import Dataset, DataLoader
@@ -17,7 +18,7 @@ from ecg_lib.models.m_conv_1 import (
     conv_class_2 as cc_2
     )
 
-def m_train(train_loader, val_loader, config):
+def m_train(train_loader, val_loader, cfg):
 
     #train_loader = inputs['train_loader']
     #val_loader = inputs['val_loader']
@@ -26,60 +27,11 @@ def m_train(train_loader, val_loader, config):
     #============================================
     #new code begins below--4/22/2026
     #============================================
-
-    '''
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=config['model']['batch_size'],
-        shuffle=True,
-        num_workers=config['model']['num_workers']
-        )
-
-        
-    x_db, y_db = train_loader.dataset[0:5]
-    print(type(y_db))
-    print(y_db.shape)
-    print(y_db.dtype)
-    print(y_db.ndim)
-    print(f"y_db, {y_db[0:5]}")
-    
-    print(f"type(train_loader) {type(train_loader)}")
-    print(f"len(train_loader.dataset) {len(train_loader.dataset)}")
-    print(f"len(train_loader) {len(train_loader)}")
-    print(f"type first element x {type(x_db)}")
-    print(f"shape first element x {x_db.shape}")
-    print(f"type first element y {type(y_db)}")
-    print(f"value first element y {y_db}")
-
-    X_dbg, Y_dbg = next(iter(train_loader))
-    print(f"shape first batch X {X_dbg.shape}")
-    print(f"shape first batch Y {Y_dbg.shape}")
-    print(f"shape first observation from batch {X_dbg[0].shape}")
-    print(f"first label from batch {Y_dbg[0]}")
-    
-    val_loader = DataLoader(
-        val_dataset,
-        batch_size=config['model']['batch_size'],
-        shuffle=True,
-        num_workers=config['model']['num_workers']
-        )
-        
-    #this is not in train_0.py because it is associated with testing. It may be moved into ppm
-    #with the train and val datasets later, but for now, it's here
-    test_loader = DataLoader(
-        test_dataset,
-        batch_size=config['model']['batch_size'],
-        shuffle=True,
-        num_workers=config['model']['num_workers']
-        )
-    
-    '''
-    #============================================================
     model = cc_1(
-        input_size=config['model']['input_size'],
-        hidden_size=config['model']['hidden_size'],     #x2 for bidirectional LSTM is included in classifier
-        num_layers=config['model']['num_layers'],       #I think this is a vestigial relic of an earlier idea
-        num_classes = config['model']['num_classes']
+        input_size=cfg.model['input_size'],
+        hidden_size=cfg.model['hidden_size'],     #x2 for bidirectional LSTM is included in classifier
+        num_layers=cfg.model['num_layers'],       #I think this is a vestigial relic of an earlier idea
+        num_classes = cfg.model['num_classes']
         )
     #============================================================
 
@@ -90,7 +42,7 @@ def m_train(train_loader, val_loader, config):
     #loss and optimizer
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr = config['model']['initial_learn_rate'])
+    optimizer = optim.Adam(model.parameters(), lr = cfg.model['initial_learn_rate'])
 
     #=============================================================
     #training loop
@@ -105,8 +57,11 @@ def m_train(train_loader, val_loader, config):
     #print(device)
     #print(torch.cuda.is_available())
     #print(torch.cuda.get_device_name(0))
-
-    for epoch in range(config['model']['epochs']):
+    headers = ['epochs','train loss','validation count','val loss','best val loss']
+    status_dict = {'0':headers}
+    status_count = 1
+    
+    for epoch in range(cfg.model['epochs']):
         if val_flag:    
             break           #make this a return command once this is moved into a subfunction
             
@@ -134,13 +89,14 @@ def m_train(train_loader, val_loader, config):
             
             batch_count += 1        #inelegant but easy to read
             val_loss = 0
-            if batch_count % config['model']['validation_frequency'] == 0:
+            if batch_count % cfg.model['validation_frequency'] == 0:
 
                 avg_loss = running_loss / len(train_loader)
                 
                 #training stats to screen
-                print(f"Epochs {epoch + 1}/{config['model']['epochs']}, Loss: {avg_loss:.4f}")
-                print(f"Iterations {len(train_loader)}")   
+                print(f"Epochs {epoch + 1}/{cfg.model['epochs']}, Loss: {avg_loss:.4f}")
+                #print(f"Iterations {len(train_loader)}")
+                epoch_nums = [(epoch+1),avg_loss]     
 
                 #validation loop
                 for X_batch, Y_batch in val_loader:
@@ -161,15 +117,22 @@ def m_train(train_loader, val_loader, config):
                     best_val_count += 1
 
                 #validation stats to screen
-                print(f"Validation Count {best_val_count}/{config['model']['validation_patience']}, Val Loss: {val_loss:.4f}, Best Val Loss: {best_val_loss:.4f}")
+                print(f"Validation Count {best_val_count}/{cfg.model['validation_patience']}, Val Loss: {val_loss:.4f}, Best Val Loss: {best_val_loss:.4f}")
+                val_numbs = [best_val_count, val_loss, best_val_loss]
                 
-                if best_val_count >= config['model']['validation_patience']:    #val patience test
+                status_nums = epoch_nums + val_numbs
+                status_dict[status_count] = status_nums
+                status_count += 1
+                
+                if best_val_count >= cfg.model['validation_patience']:    #val patience test
                     val_flag = True
                     break
+
+    status_df = pd.DataFrame(status_dict).T
                 
     model.load_state_dict(best_model)
 
-    return model
+    return model, status_df
     #{                        #debug out
     #'train_loader':train_loader,
     #'config':config,

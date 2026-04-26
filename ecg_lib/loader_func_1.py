@@ -10,9 +10,9 @@ import ast
 #sampling rate is either 100 or 500, depending on which set of data is of interest
 #path is the path to the data. The filename from dataFrame.filename_## will be appended to the path
 #to get the file location
-def load_data_0(dataFrame, config):
-    pathIn = config["data"]["path"]
-    samplingRate = config["data"]["sampling_rate"]
+def load_data_1(dataFrame, cfg):
+    pathIn = cfg.data['path']
+    samplingRate = cfg.data['sampling_rate']
     if samplingRate == 100:
         data = [wfdb.rdsamp(pathIn+f) for f in dataFrame.filename_lr]
     else:

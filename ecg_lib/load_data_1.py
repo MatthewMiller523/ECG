@@ -27,12 +27,12 @@ import pandas as pd
 import ast
 
 #import functions
-from . import loader_func_0 as lf
+from . import loader_func_1 as lf
 
-def load_data_0(config):
+def load_data_0(cfg):
     try:
-        data_path = config['data']['path']
-        sampling_rate = config['data']['sampling_rate']
+        data_path = cfg.data['path']
+        sampling_rate = cfg.data['sampling_rate']
     except KeyError as e:
         raise KeyError(f"Missing required config key: {e}") from e
         
@@ -70,7 +70,7 @@ def load_data_0(config):
 
     #loads datafiles signal        
     try:
-        X = lf.load_data_0(Y,config)
+        X = lf.load_data_1(Y,cfg)
     except Exception as e:
         raise RuntimeError(f"Failed while loading raw wfdb signal data") from e
 

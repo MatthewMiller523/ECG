@@ -15,9 +15,9 @@ batch_size = 10
 initial_learn_rate = 0.001
 
 #training proper
-epochs = 100
-validation_patience = 25		#how many validation chances training has to get better
-validation_frequency = 25		#how often we validate
+epochs = 3
+validation_patience = 12		#how many validation chances training has to get better
+validation_frequency = 2		#how often we validate
 
 #200 all is good for serious testing
 #10, 5, 5 is good for rapid testing
@@ -35,3 +35,8 @@ sampling_rate = 100   #100 or 500
 num_leads = 12
 train_index = 2
 train_key = 'sex'
+
+[meta]
+output_csv = true	#TOML booleans are lower case
+csv_name = 'train_'	#don't include the '.csv' suffix
+validation = true

@@ -11,18 +11,18 @@ fold and split
 import random
 #import numpy as np
 
-def fold_0(inputs):
+def fold_0(X, Y, cfg):
 
     #unpack inputs if necessary
-    X = inputs['X']
-    Y = inputs['Y']
-    config = inputs['config']
-    train_index = config['data']['train_index']
-    train_key = config['data']['train_key']
+    #X = inputs['X']
+    #Y = inputs['Y']
+    #config = inputs['config']
+    train_index = cfg.data['train_index']
+    #train_key = config.data['train_key']
 
     #random.seed(config["general"]["r_seed"]            #set random module seed
     #np.random.seed(config["general"]["np_r_seed"])     #set np seed
-    test_fold = config['model']['test_fold']            #the test_fold is a constant testdata set
+    test_fold = cfg.model['test_fold']                  #the test_fold is a constant testdata set
     val_fold = 9                                        #just use random for now/could set this to 9
     #val_fold = config["model"]["validation_fold"]      #set validation fold
 

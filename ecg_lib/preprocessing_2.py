@@ -28,9 +28,9 @@ def d_average_slice_0(inputs):
     return out_primitive    
 
 
-def d_average_array_0(inputs, config):
+def d_average_array_0(inputs, cfg):
     num_samples = len(inputs)
-    out = np.zeros((num_samples, 1, 1000, config['data']['num_leads']))
+    out = np.zeros((num_samples, 1, 1000, cfg.data['num_leads']))
     #print(f"out.shape {out.shape}")
     #print(f"len(inputs) {len(inputs)}")
     #print(f"type(inputs) {type(inputs)}")
@@ -39,13 +39,13 @@ def d_average_array_0(inputs, config):
     #print(f"inputs[0][0].shape {inputs[0][0].shape}")
 
     for sample_index in range(num_samples):
-        for lead_index in range(config['data']['num_leads']):
+        for lead_index in range(cfg.data['num_leads']):
             out[sample_index, 0] = inputs[sample_index][0][lead_index]
 
     #print(f"out.shape {out[0,0].shape}")
     return out
 
-def preprocessing_fun_0(inputs, config):
+def preprocessing_fun_0(inputs, cfg):
     #unpack inputs
     X_train = inputs['X_train']
     X_val = inputs['X_val']
@@ -56,9 +56,9 @@ def preprocessing_fun_0(inputs, config):
 
     #============================
 
-    X_train_0 = d_average_array_0(X_train, config)
-    X_val_0 = d_average_array_0(X_val, config)
-    X_test_0 = d_average_array_0(X_test, config)
+    X_train_0 = d_average_array_0(X_train, cfg)
+    X_val_0 = d_average_array_0(X_val, cfg)
+    X_test_0 = d_average_array_0(X_test, cfg)
 
     X_train_1 = torch.tensor(X_train_0, dtype=torch.float32)
     X_val_1 = torch.tensor(X_val_0, dtype=torch.float32)
@@ -70,25 +70,23 @@ def preprocessing_fun_0(inputs, config):
     
     train_loader = DataLoader(
         train_dataset,
-        batch_size=config['model']['batch_size'],
+        batch_size=cfg.model['batch_size'],
         shuffle=True,
-        num_workers=config['model']['num_workers']
+        num_workers=cfg.model['num_workers']
         )
 
     val_loader = DataLoader(
         val_dataset,
-        batch_size=config['model']['batch_size'],
+        batch_size=cfg.model['batch_size'],
         shuffle=True,
-        num_workers=config['model']['num_workers']
+        num_workers=cfg.model['num_workers']
         )
     
-    #this is not in train_0.py because it is associated with testing. It may be moved into ppm
-    #with the train and val datasets later, but for now, it's here
     test_loader = DataLoader(
         test_dataset,
-        batch_size=config['model']['batch_size'],
+        batch_size=cfg.model['batch_size'],
         shuffle=True,
-        num_workers=config['model']['num_workers']
+        num_workers=cfg.model['num_workers']
         )
     
     return train_loader, val_loader, test_loader

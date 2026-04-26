@@ -1,5 +1,3 @@
-[]add todo list to github
-
 []introduce learn rate scheduler
 
 scheduler = torch.optim.lr_scheduler.StepLR(
@@ -34,7 +32,9 @@ result = subprocess.check_output(
 
 print(result.decode())
 
-[]create a csv with training information
+[4/26/26]add todo list to github
+[4/26/26]create a csv with training information
+[4/26/26]moved config information from reading settings.toml to variable and using that variable to everything to an imutable class cfg. This should prevent strange read/write errors
 
 
 
