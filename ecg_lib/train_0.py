@@ -1,66 +1,33 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Mar 30 15:04:51 2026
+#=============================
+#train and val
 
-@author: Matthew Miller
+import torch
+import copy
 
-Dirty main
+import torch.nn as nn
+import torch.optim as optim
 
-Runs main.py but with more variables in workspace for easier debugging
-"""
-#=======================================
-#Working and already fixed
-#=======================================
-from ecg_lib.load_data_0 import load_data_0 as ld
-from ecg_lib.fold_func_0 import fold_0
-from ecg_lib.preprocessing_1 import preprocessing_fun_0 as ppm
-import sys
+from torch.utils.tensorboard import SummaryWriter
+#from torch.utils.data import Dataset, DataLoader
 
-#import settings
-from pathlib import Path
-import tomllib
+from ecg_lib.models.m_conv_1 import (
+    conv_class_0 as cc_0,
+    conv_class_1 as cc_1,
+    conv_class_2 as cc_2
+    )
 
-def main():
+def m_train(train_loader, val_loader, config):
 
-    #get settings.toml information
-    base_dir = Path(__file__).resolve().parent
-    settings_path = base_dir / 'settings.toml'
-    with open(settings_path, 'rb') as f:
-        config = tomllib.load(f)
-
-    #load data
-    data, truth = ld(config)
-
-    #split data
-    fold_inputs = {
-        'X': data,
-        'Y': truth,
-        'config': config
-        }
-
-    fold_data = fold_0(fold_inputs)
-
-    train_dataset, val_dataset, test_dataset = ppm(fold_data, config)
+    #train_loader = inputs['train_loader']
+    #val_loader = inputs['val_loader']
+    
     
     #============================================
     #new code begins below--4/22/2026
     #============================================
 
-    import torch
-    import copy
-
-    import torch.nn as nn
-    import torch.optim as optim
-
-    from torch.utils.tensorboard import SummaryWriter
-    from torch.utils.data import Dataset, DataLoader
-
-    from ecg_lib.models.m_conv_1 import (
-        conv_class_0 as cc_0,
-        conv_class_1 as cc_1,
-        conv_class_2 as cc_2
-        )
-
+    '''
     train_loader = DataLoader(
         train_dataset,
         batch_size=config['model']['batch_size'],
@@ -68,7 +35,7 @@ def main():
         num_workers=config['model']['num_workers']
         )
 
-    '''    
+        
     x_db, y_db = train_loader.dataset[0:5]
     print(type(y_db))
     print(y_db.shape)
@@ -89,22 +56,24 @@ def main():
     print(f"shape first batch Y {Y_dbg.shape}")
     print(f"shape first observation from batch {X_dbg[0].shape}")
     print(f"first label from batch {Y_dbg[0]}")
-    '''
+    
     val_loader = DataLoader(
         val_dataset,
         batch_size=config['model']['batch_size'],
         shuffle=True,
         num_workers=config['model']['num_workers']
         )
-
-    #I don't think I'll need this, but create it now for completeness
-    #also, if I do need it later, I will never remember whether I skipped it now
+        
+    #this is not in train_0.py because it is associated with testing. It may be moved into ppm
+    #with the train and val datasets later, but for now, it's here
     test_loader = DataLoader(
         test_dataset,
         batch_size=config['model']['batch_size'],
         shuffle=True,
         num_workers=config['model']['num_workers']
         )
+    
+    '''
     #============================================================
     model = cc_1(
         input_size=config['model']['input_size'],
@@ -168,6 +137,8 @@ def main():
             if batch_count % config['model']['validation_frequency'] == 0:
 
                 avg_loss = running_loss / len(train_loader)
+                
+                #training stats to screen
                 print(f"Epochs {epoch + 1}/{config['model']['epochs']}, Loss: {avg_loss:.4f}")
                 print(f"Iterations {len(train_loader)}")   
 
@@ -190,24 +161,20 @@ def main():
                     best_val_count += 1
 
                 #validation stats to screen
-                print(f"Validation Count {best_val_count}/{config['model']['validation_patience']}, Val Loss: {val_loss:.4f}, Best Val Loss: {best_val_loss}")
-
+                print(f"Validation Count {best_val_count}/{config['model']['validation_patience']}, Val Loss: {val_loss:.4f}, Best Val Loss: {best_val_loss:.4f}")
+                
                 if best_val_count >= config['model']['validation_patience']:    #val patience test
                     val_flag = True
                     break
                 
+    model.load_state_dict(best_model)
 
-        #training stats to screen
+    return model
+    #{                        #debug out
+    #'train_loader':train_loader,
+    #'config':config,
+    #'X_batch':X_batch,
+    #'best_model':best_model
+    #}
 
- 
-        
 
-    return {                        #debug out
-    'train_loader':train_loader,
-    'config':config,
-    'X_batch':X_batch,
-    'best_model':best_model
-    }
-
-if __name__== '__main__':
-    dbg = main()

@@ -16,8 +16,11 @@ initial_learn_rate = 0.001
 
 #training proper
 epochs = 100
-validation_patience = 200		#how many validation chances training has to get better
-validation_frequency = 200		#how often we validate
+validation_patience = 25		#how many validation chances training has to get better
+validation_frequency = 25		#how often we validate
+
+#200 all is good for serious testing
+#10, 5, 5 is good for rapid testing
 
 #data proper
 test_fold = 10

@@ -10,6 +10,8 @@ Created on Sat Apr 11 14:46:24 2026
 import torch
 import numpy as np
 
+from torch.utils.data import Dataset, DataLoader
+
 #mine second
 from .ECG_Dataset_0 import ECG_Dataset
 
@@ -66,4 +68,27 @@ def preprocessing_fun_0(inputs, config):
     val_dataset = ECG_Dataset(X_val_1, Y_val)
     test_dataset = ECG_Dataset(X_test_1, Y_test)
     
-    return train_dataset, val_dataset, test_dataset
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=config['model']['batch_size'],
+        shuffle=True,
+        num_workers=config['model']['num_workers']
+        )
+
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=config['model']['batch_size'],
+        shuffle=True,
+        num_workers=config['model']['num_workers']
+        )
+    
+    #this is not in train_0.py because it is associated with testing. It may be moved into ppm
+    #with the train and val datasets later, but for now, it's here
+    test_loader = DataLoader(
+        test_dataset,
+        batch_size=config['model']['batch_size'],
+        shuffle=True,
+        num_workers=config['model']['num_workers']
+        )
+    
+    return train_loader, val_loader, test_loader
