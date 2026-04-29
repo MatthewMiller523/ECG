@@ -11,13 +11,17 @@ hidden_size = 64
 num_layers = 1
 num_classes = 2
 num_workers = 0
-batch_size = 10
+batch_size = 10	#this is about max for cc_1. cc_2 can go higher
 initial_learn_rate = 0.001
 
 #training proper
-epochs = 3
-validation_patience = 12		#how many validation chances training has to get better
-validation_frequency = 2		#how often we validate
+epochs = 10
+validation_patience = 5		#how many validation chances training has to get better
+validation_frequency = 5		#how often we validate in batches
+lr_scheduler = false
+step_size = 10
+gamma = 0.5
+
 
 #200 all is good for serious testing
 #10, 5, 5 is good for rapid testing
@@ -31,7 +35,7 @@ validation_fold = 9
 path = 'D:/ECG_Data/'
 timesteps = 10
 features = 10
-sampling_rate = 100   #100 or 500
+sampling_rate = 500   #100 or 500
 num_leads = 12
 train_index = 2
 train_key = 'sex'
@@ -40,4 +44,4 @@ train_key = 'sex'
 output_csv = true	#TOML booleans are lower case
 csv_name = 'train_'	#don't include the '.csv' suffix
 validation = true
-monitor_gpu = false
+monitor_gpu = true

@@ -29,19 +29,7 @@ ECG_projectN/
 |   |-m_classifier_0.py (example)
 |	|-m_conv_1.py
 
-3. roadmap
-[X] prevent read-write confusion error in config
-[-] test
-[ ] learn rate scheduler
-[-] monitor GPU usage
-[X] output training metadata to csv
-[-] more models
-|-[ ] unsupervised learning
-
-
-[ ] todo
-[-] ongoing/more needed
-[X] complete, may be removed from roadmap
+3. roadmap is in todo.txt in docs/
 
 Bib:
 1. 

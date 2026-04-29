@@ -69,10 +69,10 @@ class conv_class_2(nn.Module):              #pooling
     def forward(self,x):
         out = self.conv2a(x)
         out = self.act1(out)
-        out = self.pool1(self.act2(self.conv2a(out)))
+        out = self.pool1(out)
         out = self.conv2b(out)
         out = self.act2(out)
-        out = self.pool2(self.act2(self.conv2b(out)))
+        out = self.pool2(out)
         out = self.flat(out)
         out = self.fct1(out)
         out = self.act3(out)

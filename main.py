@@ -39,7 +39,7 @@ def main():
     t_loss, t_acc = mtest(test_loader, t_model)
 
 
-    return status_var
+    return truth
 
 if __name__== '__main__':
-    dbg = main()        #dbg is all debugging (dbg) variables
+    truth = main()        #dbg is all debugging (dbg) variables

@@ -1,11 +1,10 @@
-[]introduce learn rate scheduler
+[-] test cc_2 (conv with max pooling)
+[] try other variables as classification tools
+|-[] implement 'diagnostic_superclass' as classification variable
 
-scheduler = torch.optim.lr_scheduler.StepLR(
-    optimizer,
-    step_size=5,
-    gamma=0.5
-)
 
+
+[4/29/26]introduce learn rate scheduler
 [4/27/26]Monitor GPU usage
 [4/26/26]Load model later as necessary
 [4/26/26]add todo list to github

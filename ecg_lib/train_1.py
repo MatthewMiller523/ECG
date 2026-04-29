@@ -29,16 +29,11 @@ def gpu_status():
     ])
     print(out.decode().strip())
 
+#training function
+
 def m_train(train_loader, val_loader, cfg):
 
-    #train_loader = inputs['train_loader']
-    #val_loader = inputs['val_loader']
-    
-    
-    #============================================
-    #new code begins below--4/22/2026
-    #============================================
-    model = cc_1(
+    model = cc_2(
         input_size=cfg.model['input_size'],
         hidden_size=cfg.model['hidden_size'],     #x2 for bidirectional LSTM is included in classifier
         num_layers=cfg.model['num_layers'],       #I think this is a vestigial relic of an earlier idea
@@ -54,6 +49,13 @@ def m_train(train_loader, val_loader, cfg):
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr = cfg.model['initial_learn_rate'])
+
+    if cfg.model['lr_scheduler']:
+        scheduler = torch.optim.lr_scheduler.StepLR(
+            optimizer,
+            step_size = cfg.model['step_size'],
+            gamma = cfg.model['gamma']
+            )
 
     #=============================================================
     #training loop
@@ -79,7 +81,7 @@ def m_train(train_loader, val_loader, cfg):
     
     for epoch in range(cfg.model['epochs']):
         if val_flag:    
-            break           #make this a return command once this is moved into a subfunction
+            return model, status_df           #make this a return command once this is moved into a subfunction
             
         model.train()
         running_loss=0.0
@@ -105,12 +107,6 @@ def m_train(train_loader, val_loader, cfg):
             
             batch_count += 1        #inelegant but easy to read
             val_loss = 0
-            
-            if cfg.meta['monitor_gpu']:
-                #print(torch.cuda.memory_allocated(0) / 1e9)
-                #print(torch.cuda.memory_reserved(0) / 1e9)
-                #print(torch.cuda.max_memory_allocated(0) / 1e9)
-                gpu_status()
             
             if batch_count % cfg.model['validation_frequency'] == 0:
 
@@ -145,14 +141,17 @@ def m_train(train_loader, val_loader, cfg):
                 
                 #status_nums = epoch_nums + val_numbs
                 status_df.loc[len(status_df)] = epoch_nums + val_numbs
+                
+                if cfg.meta['monitor_gpu']:
+                    print("Utilization %, Memory Used, Memory Total")
+                    gpu_status()
+                
                 status_count += 1
                 
                 if best_val_count >= cfg.model['validation_patience']:    #val patience test
                     val_flag = True
                     break
-
-    #status_df = pd.DataFrame(status_dict).T
-                
+  
     model.load_state_dict(best_model)
 
     return model, status_df
