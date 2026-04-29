@@ -33,8 +33,7 @@ ECG_projectN/
 [X] prevent read-write confusion error in config
 [-] test
 [ ] learn rate scheduler
-[ ] load models as necessary
-[ ] monitor GPU usage
+[-] monitor GPU usage
 [X] output training metadata to csv
 [-] more models
 |-[ ] unsupervised learning

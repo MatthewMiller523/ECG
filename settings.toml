@@ -40,3 +40,4 @@ train_key = 'sex'
 output_csv = true	#TOML booleans are lower case
 csv_name = 'train_'	#don't include the '.csv' suffix
 validation = true
+monitor_gpu = false

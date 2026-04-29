@@ -18,9 +18,6 @@ from ecg_lib.model_test_0 import m_test_0 as mtest
 from ecg_lib.output_write_0 import o_write_0 as o_write
 import sys
 
-#import settings
-#from pathlib import Path
-#import tomllib
 
 def main():
 
@@ -33,13 +30,14 @@ def main():
 
     #train model
     t_model, status_var = mtrain(train_loader, val_loader, cfg)
-    
-    #test model
-    t_loss, t_acc = mtest(test_loader, t_model)
 
     #write training metadata to file
     if cfg.meta['output_csv']:
         o_write(status_var, cfg)
+    
+    #test model
+    t_loss, t_acc = mtest(test_loader, t_model)
+
 
     return status_var
 

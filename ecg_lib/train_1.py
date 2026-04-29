@@ -18,6 +18,17 @@ from ecg_lib.models.m_conv_1 import (
     conv_class_2 as cc_2
     )
 
+#gpu monitoring
+import subprocess
+
+def gpu_status():
+    out = subprocess.check_output([
+        "nvidia-smi",
+        "--query-gpu=utilization.gpu,memory.used,memory.total",
+        "--format=csv,noheader,nounits"
+    ])
+    print(out.decode().strip())
+
 def m_train(train_loader, val_loader, cfg):
 
     #train_loader = inputs['train_loader']
@@ -54,11 +65,16 @@ def m_train(train_loader, val_loader, cfg):
     epoch_count = 0                    
     best_val_loss = float('inf')
     best_val_count = 0
-    #print(device)
-    #print(torch.cuda.is_available())
-    #print(torch.cuda.get_device_name(0))
+    
+    if cfg.meta['monitor_gpu']:
+        #print(device)
+        #print(torch.cuda.is_available())
+        #print(torch.cuda.get_device_name(0))
+        #torch.cuda.reset_peak_memory_stats()
+        gpu_status()
+        
     headers = ['epochs','train loss','validation count','val loss','best val loss']
-    status_dict = {'0':headers}
+    status_df = pd.DataFrame(columns=headers)
     status_count = 1
     
     for epoch in range(cfg.model['epochs']):
@@ -89,6 +105,13 @@ def m_train(train_loader, val_loader, cfg):
             
             batch_count += 1        #inelegant but easy to read
             val_loss = 0
+            
+            if cfg.meta['monitor_gpu']:
+                #print(torch.cuda.memory_allocated(0) / 1e9)
+                #print(torch.cuda.memory_reserved(0) / 1e9)
+                #print(torch.cuda.max_memory_allocated(0) / 1e9)
+                gpu_status()
+            
             if batch_count % cfg.model['validation_frequency'] == 0:
 
                 avg_loss = running_loss / len(train_loader)
@@ -120,15 +143,15 @@ def m_train(train_loader, val_loader, cfg):
                 print(f"Validation Count {best_val_count}/{cfg.model['validation_patience']}, Val Loss: {val_loss:.4f}, Best Val Loss: {best_val_loss:.4f}")
                 val_numbs = [best_val_count, val_loss, best_val_loss]
                 
-                status_nums = epoch_nums + val_numbs
-                status_dict[status_count] = status_nums
+                #status_nums = epoch_nums + val_numbs
+                status_df.loc[len(status_df)] = epoch_nums + val_numbs
                 status_count += 1
                 
                 if best_val_count >= cfg.model['validation_patience']:    #val patience test
                     val_flag = True
                     break
 
-    status_df = pd.DataFrame(status_dict).T
+    #status_df = pd.DataFrame(status_dict).T
                 
     model.load_state_dict(best_model)
 

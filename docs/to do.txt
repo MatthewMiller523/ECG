@@ -6,32 +6,8 @@ scheduler = torch.optim.lr_scheduler.StepLR(
     gamma=0.5
 )
 
-[]Load model later as necessary
-model.load_state_dict(torch.load("best.pt"))
-
-
-[]Monitor GPU usage
-import torch
-
-print(torch.cuda.is_available())
-print(torch.cuda.current_device())
-print(torch.cuda.get_device_name(0))
-
-print(torch.cuda.memory_allocated(0)/1e9)	#GB
-print(torch.cuda.memory_reserved(0)/1e9)	#GB
-
-import subprocess
-
-result = subprocess.check_output(
-    [
-        "nvidia-smi",
-        "--query-gpu=utilization.gpu,memory.used,memory.total",
-        "--format=csv,noheader,nounits"
-    ]
-)
-
-print(result.decode())
-
+[4/27/26]Monitor GPU usage
+[4/26/26]Load model later as necessary
 [4/26/26]add todo list to github
 [4/26/26]create a csv with training information
 [4/26/26]moved config information from reading settings.toml to variable and using that variable to everything to an imutable class cfg. This should prevent strange read/write errors
