@@ -9,7 +9,7 @@ np_r_seed = 1777
 input_size = 12
 hidden_size = 64
 num_layers = 1
-num_classes = 2
+num_classes = 5	#for diagnostic superclass classification
 num_workers = 0
 batch_size = 10	#this is about max for cc_1. cc_2 can go higher
 initial_learn_rate = 0.001
@@ -35,13 +35,13 @@ validation_fold = 9
 path = 'D:/ECG_Data/'
 timesteps = 10
 features = 10
-sampling_rate = 500   #100 or 500
+sampling_rate = 100   #100 or 500
 num_leads = 12
-train_index = 2
-train_key = 'sex'
+train_index = 27
+train_key = 'diagnostic_superclass'
 
 [meta]
 output_csv = true	#TOML booleans are lower case
-csv_name = 'train_'	#don't include the '.csv' suffix
+csv_name = 'results_'	#don't include the '.csv' suffix
 validation = true
 monitor_gpu = true

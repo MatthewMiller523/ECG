@@ -1,9 +1,9 @@
-[-] test cc_2 (conv with max pooling)
-[] try other variables as classification tools
-|-[] implement 'diagnostic_superclass' as classification variable
+[-] late fusion
+[-] try other variables as classification tools
+|-[-] implement 'diagnostic_superclass' as classification variable
 
-
-
+[5/9/26] data normalization
+[5/7/26] test cc_2 (conv with max pooling)
 [4/29/26]introduce learn rate scheduler
 [4/27/26]Monitor GPU usage
 [4/26/26]Load model later as necessary

@@ -80,4 +80,36 @@ class conv_class_2(nn.Module):              #pooling
         
         return out
         
+class conv_class_3(nn.Module):              #pooling with metadata
+    def __init__(self, input_size, hidden_size, num_layers, num_classes, metadata_size):
+        super().__init__()
+        
+        self.conv2a = nn.Conv2d(1, 16, kernel_size = 3, padding = 1)
+        self.act1 = nn.Softsign()
+        self.pool1 = nn.MaxPool2d(2)
+        self.conv2b = nn.Conv2d(16, 32, kernel_size=3, padding=1)
+        self.act2 = nn.Softsign()
+        self.pool2 = nn.MaxPool2d(2)
+        self.flat = nn.Flatten()
+        self.fct1 = nn.Linear(32 * 250 * 3 + metadata_size, 64)
+        self.act3 = nn.Softsign()
+        self.fct2 = nn.Linear(64, num_classes)
+        
+    def forward(self, x, y):
+        out = self.conv2a(x)
+        out = self.act1(out)
+        out = self.pool1(out)
+        out = self.conv2b(out)
+        out = self.act2(out)
+        out = self.pool2(out)
+        out = self.flat(out)
+        
+        #concatenate in metadata
+        out = torch.cat((out, y), dim=1)
+        
+        out = self.fct1(out)
+        out = self.act3(out)
+        out = self.fct2(out)
+        
+        return out
         

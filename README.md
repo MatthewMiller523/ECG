@@ -14,20 +14,22 @@ Change settings in 'settings.toml', which should be in the same directory as mai
 
 Ensure root directory is ECG_project0 not just ECG
 
+Output is written to data/. This dir is created if not present, and outputs by default have a 5 digit int of unix time appended to keep order. If using 'results_' as the filename root, output will be 'results_00001.csv'. Set filename root in settings.toml under meta['csv_name'].
+
 2. Key files and features (where N is the iteration number):
 
 ECG_projectN/
 |
 |- README.md
 |- docs/
+|- data/
 |
 |-settings.toml
 |-main.py
+|
 |-ecg_lib/
 | |-models/
-|   |-models.py (template)
-|   |-m_classifier_0.py (example)
-|	|-m_conv_1.py
+
 
 3. roadmap is in todo.txt in docs/
 
@@ -38,6 +40,8 @@ https://physionet.org/content/ptb-xl/1.0.3/
 
 Wagner, P., Strodthoff, N., Bousseljot, R., Samek, W., and Schaeffter, T. (2022) 'PTB-XL, a large publicly available electrocardiography dataset' (version 1.0.3), PhysioNet. RRID:SCR_007345. Available at: https://doi.org/10.13026/kfzx-aw45
 
+Goldberger, A., et al. "PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220." (2000). RRID:SCR_007345.
+https://doi.org/10.1038/s41597-020-0495-6
 
-
+Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P. C., Mark, R., ... & Stanley, H. E. (2000). PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220. RRID:SCR_007345.
 

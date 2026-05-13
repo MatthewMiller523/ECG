@@ -11,6 +11,7 @@ class ECG_Dataset(Dataset):
         '''
         X: [N, seq_len, num_features]
         Y: [N]
+        Z: [N, 
         '''
         self.X = torch.as_tensor(X, dtype=torch.float32)
         self.Y = torch.Tensor(Y.to_numpy(dtype=np.float32))   #fix this when ready
@@ -24,18 +25,21 @@ class ECG_Dataset(Dataset):
         return x_i, y_i
 
 class ECG_md_Dataset(Dataset):
-    def __init__(self, X, Y):
+    def __init__(self, X, Y, Z):
         '''
-        for md data only, i.e. no truth
-        X: [N, seq_len, num_features]
+        X: [N, 1, seq_len, num_features]
+        Y: [N]
+        Z: [N, 1, seq_len, num_features]
         '''
         self.X = torch.as_tensor(X, dtype=torch.float32)
+        self.Y = torch.as_tensor(Y, dtype=torch.float32)   #fix this when ready
+        self.Z = torch.as_tensor(Z, dtype=torch.float32)
 
     def __len__(self):
         return len(self.X)
 
     def __getitem__(self, idx):
         x_i = self.X[idx]
-        return x_i
-    
-        
+        y_i = self.Y[idx]
+        z_i = self.Z[idx]
+        return x_i, y_i, z_i
