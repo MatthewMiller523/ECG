@@ -29,18 +29,6 @@ def main():
     data, truth = ld(cfg)
     fold_data, runtime = fold(data, truth, cfg, runtime)
 
-    print("X_train:", len(fold_data["X_train"]))
-    print("X_val:", len(fold_data["X_val"]))
-    print("X_test:", len(fold_data["X_test"]))
-
-    print("Y_train:", len(fold_data["Y_train"]))
-    print("Y_val:", len(fold_data["Y_val"]))
-    print("Y_test:", len(fold_data["Y_test"]))
-
-    print("md_train:", len(fold_data["md_train"]))
-    print("md_val:", len(fold_data["md_val"]))
-    print("md_test:", len(fold_data["md_test"]))
-
     train_loader, val_loader, test_loader = ppm(fold_data, cfg, runtime)
 
     #train model
@@ -52,7 +40,6 @@ def main():
 
     #test model
     t_loss, t_acc_label, t_acc_exact = mtest(test_loader, t_model)
-
 
     return t_loss, t_acc_label, t_acc_exact
 

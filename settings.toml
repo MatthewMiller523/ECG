@@ -15,8 +15,8 @@ batch_size = 10	#this is about max for cc_1. cc_2 can go higher
 initial_learn_rate = 0.001
 
 #training proper
-epochs = 10
-validation_patience = 5		#how many validation chances training has to get better
+epochs = 100
+validation_patience = 50		#how many validation chances training has to get better
 validation_frequency = 5		#how often we validate in batches
 lr_scheduler = false
 step_size = 10

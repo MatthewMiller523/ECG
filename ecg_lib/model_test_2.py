@@ -7,7 +7,8 @@ import torch.nn as nn
 
 
 def m_test_1(test_loader, t_model):
-
+    #================================================================
+    '''
     print(f"len(test_loader.dataset): {len(test_loader.dataset)}")
     print(f"len(test_loader): {len(test_loader)}")
 
@@ -16,7 +17,8 @@ def m_test_1(test_loader, t_model):
 
     if len(test_loader) == 0:
         raise ValueError("test_loader has zero batches")
-
+    '''
+    #========================================================================
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     t_model = t_model.to(device)
     criterion = nn.BCEWithLogitsLoss()
@@ -50,16 +52,18 @@ def m_test_1(test_loader, t_model):
 
             correct_samples += (predicted == Y_batch).all(dim=1).sum().item()
             total_samples += Y_batch.size(0)
-
+    #========================================================
+    '''
     print(f"total_labels: {total_labels}")
     print(f"total_samples: {total_samples}")
-
+    
     if total_labels == 0:
         raise ValueError("No test labels were evaluated")
 
     if total_samples == 0:
         raise ValueError("No test samples were evaluated")
-
+        '''
+    #=======================================================
     avg_test_loss = test_loss / len(test_loader)
     label_accuracy = correct_labels / total_labels
     exact_match_accuracy = correct_samples / total_samples
